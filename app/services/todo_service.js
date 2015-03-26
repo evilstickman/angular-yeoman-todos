@@ -9,11 +9,13 @@
         var baseUrl = '/1/table/data/';
 
         self.tableName = null;
+        self.appName = null;
 
         self.readAll = function () {
             return $http({
                 method: 'GET',
-                url: Backand.configuration.apiUrl + baseUrl + self.tableName
+                url: Backand.configuration.apiUrl + baseUrl + self.tableName,
+                headers: {AppName: self.appName}
             }).then(function(response) {
                 return response.data.data;
             });
@@ -22,7 +24,8 @@
         self.readOne = function (id) {
             return $http({
                 method: 'GET',
-                url: Backand.configuration.apiUrl + baseUrl + self.tableName + '/' + id
+                url: Backand.configuration.apiUrl + baseUrl + self.tableName + '/' + id,
+                headers: {AppName: self.appName}
             }).then(function(response) {
                 return response.data;
             });
@@ -32,6 +35,7 @@
             return $http({
                 method: 'POST',
                 url : Backand.configuration.apiUrl + baseUrl + self.tableName,
+                headers: {AppName: self.appName},
                 data: data,
                 params: {
                     returnObject: true
@@ -45,6 +49,7 @@
             return $http({
                 method: 'PUT',
                 url : Backand.configuration.apiUrl + baseUrl + self.tableName + '/' + id,
+                headers: {AppName: self.appName},
                 data: data
             }).then(function(response) {
                 return response.data;
@@ -54,7 +59,8 @@
         self.delete = function (id) {
             return $http({
                 method: 'DELETE',
-                url : Backand.configuration.apiUrl + baseUrl + self.tableName + '/' + id
+                url : Backand.configuration.apiUrl + baseUrl + self.tableName + '/' + id,
+                headers: {AppName: self.appName}
             })
         };
 

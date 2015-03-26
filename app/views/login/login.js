@@ -7,29 +7,31 @@
      * # LoginCtrl
      * Backand login control - need to implement in order to get the token for authentication
      */
-    function LoginCtrl(Backand, $location) {
+    function LoginCtrl(Backand, $location, $http, TodoService) {
         var self = this;
         function init() {
-            self.username = 'guest@backand.com';
-            self.password = 'guest1234';
-            self.appName  = 'prod1103';
+
+          //add listner from parent
+          if (window.addEventListener) {
+            addEventListener("message", setToken, false)
+          } else {
+            attachEvent("onmessage", setToken)
+          }
+          //let parent know the iframe is ready
+          window.parent.postMessage(["ready", ''], "*");
         }
 
-        self.signIn = function() {
-            Backand.signin(self.username, self.password, self.appName)
-                .then(
-                function () {
-                    $location.path('/');
-                },
-                function (data) {
-                    console.log(data);
-                    self.error = data && data.error_description || 'Unknown error from server';
-                }
-            );
+        function setToken(event) {
+          Backand.configuration.apiUrl = event.data.url;
+          Backand.token.put(event.data.auth);
+          Backand.setDefaultHeader(event.data.auth);
+          TodoService.appName = event.data.appName;
+          $location.path('/');
         }
+
         init();
     }
 
     angular.module('mytodoApp')
-        .controller('LoginCtrl', LoginCtrl);
+        .controller('LoginCtrl', ['Backand','$location','$http','TodoService', LoginCtrl]);
 })();

@@ -90,5 +90,5 @@
         init();
     }
 
-    angular.module('mytodoApp').controller('MainCtrl', MainCtrl);
+    angular.module('mytodoApp').controller('MainCtrl',['$state', 'TodoService', MainCtrl]);
 })();
